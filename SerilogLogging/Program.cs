@@ -7,8 +7,6 @@ using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
 
 
 IConfigurationRoot configuration = new ConfigurationBuilder()
@@ -20,7 +18,6 @@ IConfigurationRoot configuration = new ConfigurationBuilder()
 Log.Logger = new LoggerConfiguration()
 .WriteTo.Console()
 .WriteTo.Debug(outputTemplate: DateTime.Now.ToString())
-.WriteTo.Seq("http://localhost:5041")
 .ReadFrom.Configuration(configuration)
 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
                  .CreateLogger();
@@ -31,6 +28,9 @@ builder.Services.AddDbContext<SerilogDbContext>(cfg =>
 {
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("cString"));
 });
+// Add services to the container.
+builder.Services.AddControllersWithViews();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
